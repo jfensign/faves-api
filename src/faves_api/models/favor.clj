@@ -1,5 +1,5 @@
 (ns faves-api.models.favor
-	(:require [faves-api.database :refer [favors paginate]]
+	(:require [faves-api.database :refer [favor paginate]]
 		      [validateur.validation :refer :all]
 		      [crypto.password.pbkdf2 :as password])
 	(:use (korma core)))
@@ -17,21 +17,21 @@
 
 (defn ^{:private false
 	    :doc "Validation rules for favor data."}
-	     malformed? [favor]
+	     malformed? [f]
        	(let [v (validation-set
   		 (presence-of :title)
          (presence-of :instructions))]
     	 
-    	 (if (valid? v favor)
+    	 (if (valid? v f)
     	  	 false
-    	  	 (v favor))))
+    	  	 (v f))))
 
 (defn list-by-user-id [id]
-	(paginate favors {:where {:user_id id}}))
+	(paginate favor {:where {:user_id id}}))
 
 (defn find-by-id [id]
 	(first 
-		(select favors 
+		(select favor 
 			(where {:id id}))))
 
 (defn create [favor]
@@ -39,5 +39,5 @@
 		  validation-errors (malformed? sanitized)]
 		(println sanitized)
 		(if-not validation-errors
-		        (insert favors (values sanitized))
+		        (insert favor (values sanitized))
 		        validation-errors)))

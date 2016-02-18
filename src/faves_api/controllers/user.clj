@@ -11,7 +11,12 @@
 
 
 (defresource select [id])
-(defresource describe [])
+
+(defresource describe
+	:allowed-methods [:get]
+	:available-media-types ["application/json"]
+	:service-available? {:representation {:media-type "application/json"}}
+	:handle-ok (fn [_] (user/describe)))
 
 
 

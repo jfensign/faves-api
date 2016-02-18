@@ -10,9 +10,7 @@
 	true)
 
 (defn- favor-processable [_]
-	(let [validation-errors (-> 
-			(:profile _)
-			user/malformed?)]
+	(let [validation-errors (:profile _)]
 		(if validation-errors
 			false
 			(not (conflict-check _)))))

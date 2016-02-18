@@ -1,5 +1,6 @@
 (ns config.migrate-config
-   (:require [faves-api.config.database :refer [db-spec]])
+   (:require 
+    [faves-api.config.database :refer [db-spec]])
    (:use [drift.builder :only [incremental-migration-number-generator]]
          [korma core db]))
 

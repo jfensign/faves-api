@@ -38,13 +38,13 @@
 
 (def
 	^{:private false
-	  :doc "Database name. Default: test"}
+	  :doc "Database name. Default: faves"}
 	db-name
-	(or (System/getenv "DB_NAME") "test"))
+	(get (System/getenv) "DB_NAME" "faves"))
 
 (def 
 	^{:private false
-	  :doc "Master db connection string taken from environment variable \"DB_URL\". Default: postgresql://localhost:5432/test"}
+	  :doc "Master db connection string taken from environment variable \"DB_URL\". Default: postgresql://localhost:5432/faves"}
 	db-uri
 	(or (System/getenv "DB_URL") (str db-protocol "://localhost:" db-port "/" db-name)))
 
