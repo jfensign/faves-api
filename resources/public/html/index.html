@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Ops Admin</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/public/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/public/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="/public/dist/css/timeline.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/public/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/public/bower_components/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/public/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="/public/bower_components/rickshaw/rickshaw.min.css">
+
+    <link rel="stylesheet" href="/public/bower_components/angular-rangeslider/angular.rangeSlider.css">
+
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/public/bower_components/angular/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular-resource.min.js"></script>
+
+
+</head>
+
+<body ng-app="App" class="ng-scope">
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/#/">Ops Dashboard</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-cogs fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+
+                        <li ng-repeat-start="(k,v) in services" ng-switch on="v.frame">
+                            <a ng-switch-when="true" ng-href="/#/services/{{k}}">
+
+                                <div>
+                                    <strong>{{v.name}}</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>{{v.purpose}}</em>
+                                    </span>
+                                </div>
+                                <div>{{v.description}}</div>
+
+                            </a>
+                            <a ng-switch-default href="{{v.login_url}}" target="_new">
+                                <div>
+                                    <strong>{{v.name}}</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>{{v.purpose}}</em>
+                                    </span>
+                                </div>
+                                <div>{{v.description}}</div>
+
+                            </a>
+                        </li>
+                        <li ng-repeat-end class="divider"></li>
+
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                </li>
+
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="/#/"><i class="fa fa-dashboard fa-fw"></i> Apps</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Services<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li ng-repeat-start="(k,v) in services" ng-switch on="v.frame">
+                                    <a ng-switch-when="true" ng-href="/#/services/{{k}}">{{v.name}}</a>
+                                    <a ng-switch-default href="{{v.login_url}}" target="_new">{{v.name}}</a>
+                                </li>
+                                <li ng-repeat-end class="divider"></li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                        <li ng-controller="appJobListController" ng-show="ci.jobs">
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Jobs<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li ng-repeat-start="job in ci.jobs">
+                                    <a href="/#/services/datadog">{{job.name}}</a>
+                                </li>
+                                <li ng-repeat-end class="divider"></li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row" ng-show="title">
+                <div class="col-lg-12" ng-controller="HeaderController">
+                    <h1 class="page-header">{{title}}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+            	<div class="col-lg-12" ng-view>
+
+            	</div>
+
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/public/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/public/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- Underscore -->
+    <script src="/public/bower_components/underscore/underscore-min.js"></script>
+
+
+
+    <!--<script src="/public/js/morris-data.js"></script>-->
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/public/dist/js/sb-admin-2.js"></script>
+
+    <script src="/public/bower_components/angular-rangeslider/angular.rangeSlider.js"></script>
+
+    <script src="https://rawgit.com/rzajac/angularjs-slider/master/rzslider.js"></script>
+    <script src="/public/bower_components/d3/d3.min.js"></script>
+    <script src="/public/bower_components/rickshaw/rickshaw.min.js"></script>
+    <script src="/public/bower_components/angular-rickshaw/rickshaw.js"></script>
+
+ 	<script src="/public/js/angular/app.js"></script>
+ 	<script src="/public/js/angular/controllers.js"></script>
+ 	<script src="/public/js/angular/services.js"></script>
+
+
+
+<style>
+  /*! jusas-angularjs-slider - v0.1.22 - (c) Rafal Zajac <rzajac@gmail.com>, Jussi Saarivirta <jusasi@gmail.com>, Angelin Sirbu <angelin.sirbu@gmail.com>, https://github.com/rzajac/angularjs-slider.git - 2015-07-22 */
+rzslider{position:relative;display:inline-block;width:100%;height:4px;margin:30px 0 15px 0;vertical-align:middle}rzslider span{position:absolute;display:inline-block;white-space:nowrap}rzslider span.rz-base{width:100%;height:100%;padding:0}rzslider span.rz-bar-wrapper{width:100%;height:32px;padding-top:16px;margin-top:-16px;box-sizing:border-box}rzslider span.rz-bar{z-index:0;width:100%;height:4px;background:#d8e0f3;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}rzslider span.rz-bar.rz-selection{z-index:1;width:0;background:#0db9f0;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px}rzslider span.rz-pointer{top:-14px;z-index:2;width:32px;height:32px;cursor:pointer;background-color:#0db9f0;-webkit-border-radius:16px;-moz-border-radius:16px;border-radius:16px}rzslider span.rz-pointer:after{position:absolute;top:12px;left:12px;width:8px;height:8px;background:#fff;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;content:''}rzslider span.rz-pointer:hover:after{background-color:#fff}rzslider span.rz-pointer.rz-active:after{background-color:#451aff}rzslider span.rz-bubble{top:-32px;padding:1px 3px;color:#55637d;cursor:default}rzslider span.rz-bubble.rz-selection{top:16px}rzslider span.rz-bubble.rz-limit{color:#55637d}
+rzslider span.rz-bar.rz-selection {
+    background: #33cccc;
+}
+rzslider span.rz-pointer {
+    background: #cc3333;
+}
+</style>
+
+
+</body>
+
+</html>

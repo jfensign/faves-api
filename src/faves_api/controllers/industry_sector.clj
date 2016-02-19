@@ -5,7 +5,7 @@
 
 (defn- handle-ok
  ^{:private true
-   :doc "Returns all industries with hierarchical parents."}
+   :doc "Returns all sectors with hierarchical children."}
  [{{{id :id} :params} :request :as _}]
  (if id
   (industry-sector/find-by-id id)

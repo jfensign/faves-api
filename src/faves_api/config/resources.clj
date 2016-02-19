@@ -2,4 +2,6 @@
 
 (def private-key-dir "/private_keys")
 
-(def public "/public")
+(def public "public")
+
+(def html (format "%s/%s" public "html"))
