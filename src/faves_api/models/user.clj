@@ -23,11 +23,7 @@
 (defn find-by-username-password [u p]
  (when-let [row (first 
   (select user
-   (where (or (= :email u) (= :username u)))
-   (with membership 
-    (with organization 
-     (with location))
-    (with role))))]
+   (where (or (= :email u) (= :username u)))))]
   (when (password/check p (:password row)) row)))
 
 (defn create [_]

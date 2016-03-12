@@ -12,4 +12,3 @@
   (if valid
    (insert authentication (values obj))
    (assoc {} :errors obj :error-type desc))))
-

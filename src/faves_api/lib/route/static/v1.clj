@@ -3,7 +3,7 @@
   [compojure.core :refer :all]
   [compojure.route :as route]
   [faves-api.controllers 
-		 [static :as static]]))
+	[static :as static]]))
 
 (defroutes config
  (GET "/" []
@@ -11,4 +11,6 @@
  (GET "/sign-in" []
   static/sign-in-page)
  (GET "/sign-up" []
-  static/sign-up-page))
+  static/sign-up-page)
+ (GET "/home" []
+  static/home))

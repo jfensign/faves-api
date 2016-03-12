@@ -1,12 +1,12 @@
     <div class="container">
         <div class="row">
-            <div class="col-md-4 col-md-offset-4">
+            <div class="">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Please Sign In</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" name="login" action="/authenticate/v1" method="post" onsubmit="return false;">
+                        <form role="form" name="signin" action="/authenticate/v1" method="post" onsubmit="return false;">
                             <fieldset>
                             				<div id="form-login-error" class="alert alert-danger"></div>
                                 <div class="form-group">
@@ -15,7 +15,6 @@
                                 <div class="form-group">
                                     <input class="form-control" id="input-login-password" type="password" name="password" placeholder="password" />
                                 </div>
-							    <input class="form-control" type="hidden" id="input-login-device_id" name="device_id" value="OpsDash" />
 								<button class="btn btn-default"><i class=""></i><span>Login</span></button>
                             </fieldset>
                         </form>
@@ -40,37 +39,43 @@
 
 <script type="text/javascript">
 ;;(function($) {
-	var do_post = function() {
+	var do_post = function(e) {
+		e.preventDefault();
+
 		var error_wrap;
+
+		var form = $(this);
 
 		var set_error_message = function(wrapper, message) {
 			return $(wrapper).html(message).show(500)
 		};
 
 		var toggle_btn_loader = function(i) {
-			$("form > fieldset > .btn > span")[i?"hide":"show"]().parent().children("i")[i?"addClass":"removeClass"]("fa fa-spinner fa-spin")
+			$("form > fieldset > .btn > span")
+				[i ? "hide" : "show"]()
+				.parent()
+				.children("i")
+				[i ? "addClass" : "removeClass"]("fa fa-spinner fa-spin");
 		};
 
 		toggle_btn_loader(true);
 
 		return $.ajax({
-			url: $("form").attr("action"), 
-			method: $("form").attr("method"),
+			url: form.attr("action"), 
+			method: form.attr("method"),
 			data: {},
 			contentType: 'application/json',
 			xhrFields: {
         		withCredentials: true
     		},
     		beforeSend: function (xhr) {
-        		xhr.setRequestHeader('Authorization', 'Basic ' + btoa(_.map($('.form-control').toArray(), function(input) {
-				var tmp = {};
-				tmp[input.getAttribute("name")] = $(input).val();
-				return tmp;
-			}).join(":")));
+        		xhr.setRequestHeader('Authorization', 'Basic ' + btoa(_.map(form.find('.form-control').toArray(), function(input) {
+					return $(input).val();
+				}).join(":")));
     		}
 		}).
 		done(function(r) {
-			window.location.href = "/"
+			window.location.href = "/home";
 		}).
 		fail(function(xhr, ajax, error) {
 			toggle_btn_loader(false);
@@ -92,6 +97,6 @@
 		});
 	};
     
-	$("form").on("submit", do_post);
+	$("form[name=signin]").on("submit", do_post);
 })(jQuery)
 </script>

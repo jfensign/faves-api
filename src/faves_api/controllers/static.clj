@@ -5,16 +5,18 @@
  (use ring.util.response))
 
 (defn- render 
- ([f]
-  (render f r/html))
- ([f r]
-  (resource-response f {:root r})))
+ ([f]   (render f r/html))
+ ([f r] (resource-response f {:root r})))
 
-(defn index-page [{{{cookie :value} "ring-session"} :cookies}]
-	(render (if cookie "index.html" "landing.html")))
+(defn index-page [{{{cookie :value} "ring-session" :as c} :cookies :as _}]
+ (render (if cookie "index.html" "landing.html")))
+
+(defn home [{{{cookie :value} "ring-session" :as c} :cookies :as _}]
+	(println cookie)
+	(when cookie (render "index.html")))
 
 (defn sign-in-page [_]
-	(render "login.html"))
+ (render "forms/login.html"))
 
 (defn sign-up-page [_]
- (render "login.html"))
+ (render "forms/register.html"))

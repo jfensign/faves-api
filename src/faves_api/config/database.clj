@@ -3,25 +3,30 @@
 		        [clojure.walk :as walk])
 	(:import (java.net URI)))
 
-(def ^{:private true :doc "Map of schemes to subprotocols"} subprotocols
-  {"postgres" "postgresql"})
+(defn- parse-query-parts
+ ^{:private true}
+ [^String query ]
+ (and query (for [^String kvs (.split query "&")] (vec (.split kvs "=")))))
+
+(def subprotocols
+ ^{:private true :doc "Map of schemes to subprotocols"}
+ {"postgres" "postgresql"})
 
 (defn- parse-properties-uri [^URI uri]
-  (let [host (.getHost uri)
-        port (if (pos? (.getPort uri)) (.getPort uri))
-        path (.getPath uri)
-        scheme (.getScheme uri)
-        ^String query (.getQuery uri)
-        query-parts (and query (for [^String kvs (.split query "&")]
-                                 (vec (.split kvs "="))))]
+ (let [host (.getHost uri)
+       port (if (pos? (.getPort uri)) (.getPort uri))
+       path (.getPath uri)
+       scheme (.getScheme uri)
+       ^String query (.getQuery uri)
+       query-parts (parse-query-parts query)]
     (merge
      {:subname (if host
-                 (if port (str "//" host ":" port path) (str "//" host path))
-                 (.getSchemeSpecificPart uri))
+       (if port (str "//" host ":" port path) (str "//" host path))
+       (.getSchemeSpecificPart uri))
       :subprotocol (subprotocols scheme scheme)}
      (if-let [user-info (.getUserInfo uri)]
-             {:user (first (str/split user-info #":"))
-              :password (second (str/split user-info #":"))})
+      {:user (first (str/split user-info #":"))
+       :password (second (str/split user-info #":"))})
      (walk/keywordize-keys (into {} query-parts)))))
 
 (def
@@ -44,9 +49,11 @@
 
 (def 
 	^{:private false
-	  :doc "Master db connection string taken from environment variable \"DB_URL\". Default: postgresql://localhost:5432/faves"}
+	  :doc "Master db connection string taken from environment variable \"DB_URL\". Default: postgresql://faves:faves@localhost:5432/faves"}
 	db-uri
-	(or (System/getenv "DB_URL") (str db-protocol "://localhost:" db-port "/" db-name)))
+	(or (System/getenv "DB_URL") (str db-protocol "://faves:faves@localhost:" db-port "/" db-name)))
+
+(println db-uri)
 
 (def
 	^{:private false
